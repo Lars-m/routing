@@ -15,8 +15,8 @@ app.config(function ($routeProvider) {
       controller: "CompanyController"
     })
     .when("/blog", {
-      template: "<h2 style='margin:20px;'>Our great Company Blog</h2>",
-      controller: "BlogController"
+      template: "<h2 style='margin:20px;'>Our great Company Blog</h2>"
+      //controller: "BlogController"
     })
     .when("/info/:index", {
       templateUrl: "views/bookdetail.html",
@@ -41,10 +41,9 @@ app.controller("BlogController",function($scope){
   $scope.blog = "Blog for this site";
 })
 
-app.controller('ProductController', function ($scope, $routeParams) {
-  $scope.products = "Our Products";
 
-  $scope.books = [
+app.factory("bookList",function(){  
+  var books = [
     {title: "Become a specialist in Computer Science - Vol 1", info: "Study hard"}
    ,{title: "Become a specialist in Computer Science - Vol 2", info: "Complete all exercises :-)"}
    ,{title: "How to become a specialist in Computer Science - Vol 3",
@@ -55,7 +54,18 @@ app.controller('ProductController', function ($scope, $routeParams) {
        info: "Don't drink beers, until Friday (after four)",
        moreInfo: "5 Points = 5 beers ;-)"
     }
-  ];
+  ]; 
+  return {
+    getAll : function(){ return books; },
+    addBook : function(book){books.push(book);},
+    getTotal : function(){return books.length;}
+  };
+});
+
+app.controller('ProductController', function ($scope, $routeParams,bookList) {
+  $scope.products = "Our Products";
+  $scope.books =bookList.getAll();
+  bookList.addBook({title: "xxx", info: "Study hard"});
 
   if (angular.isDefined($routeParams.index)) {
     var i = $routeParams.index;
